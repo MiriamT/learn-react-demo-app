@@ -1,8 +1,6 @@
 import React from 'react';
 import { styled, Box } from '@mui/material';
-
-export const primaryColor = '#08548A';
-export const accentColor = '#FC9162';
+import { primaryColor } from '../common/common.styles';
 
 export const HomeS = styled('div')({
   height: '100vh',
@@ -31,12 +29,6 @@ export const WallpaperImgS = styled('img')({
   opacity: 0.8,
 });
 
-export const TitleS = styled('div')({
-  color: '#FC9162',
-  marginTop: '6rem',
-  marginBottom: '2rem',
-});
-
 export const SectionHeadingS = styled(Box)({
   color: primaryColor,
   marginTop: '6rem',
@@ -54,12 +46,4 @@ export const AboutMiriam = styled('div')({
   gap: '2rem',
   alignItems: 'stretch',
   gridTemplateColumns: '3fr 1fr',
-});
-
-export const FooterS = styled('div')({
-  marginTop: '10rem',
-  borderTop: `1rem solid ${accentColor}`,
-  background: primaryColor,
-  width: '100%',
-  height: '6rem',
 });

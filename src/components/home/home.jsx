@@ -24,12 +24,14 @@ import {
   SectionHeadingS,
   WallpaperS,
   WallpaperImgS,
+  HeroS,
+} from './home.styles';
+import {
   primaryColor,
   accentColor,
-  TitleS,
-  HeroS,
   FooterS,
-} from './home.styles';
+  TitleS,
+} from '../common/common.styles';
 
 const Wallpaper = ({ imageSrc }) => {
   return (
