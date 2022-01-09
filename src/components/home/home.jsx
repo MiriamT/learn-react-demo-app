@@ -66,6 +66,14 @@ const Text = ({ children }) => {
   );
 };
 
+const AccordionButton = ({ text, href }) => {
+  return (
+    <Button href={href} target="_blank" style={{ flexGrow: 1 }}>
+      {text}
+    </Button>
+  );
+};
+
 export const Home = () => {
   return (
     <HomeS>
@@ -173,27 +181,44 @@ export const Home = () => {
                 components that unify a brand.
               </Typography>
               <div style={{ marginTop: '.5rem', display: 'flex' }}>
-                <Button
+                <AccordionButton
+                  text="Google Material Design"
                   href="https://material.io/design"
-                  target="_blank"
-                  style={{ flexGrow: 1 }}
-                >
-                  Google Material Design
-                </Button>
-                <Button
+                />
+                <AccordionButton
+                  text="IBM Carbon"
                   href="https://www.carbondesignsystem.com/"
-                  target="_blank"
-                  style={{ flexGrow: 1 }}
-                >
-                  IBM Carbon
-                </Button>
-                <Button
+                />
+                <AccordionButton
+                  text="GS Design System"
                   href="https://design.gs.com/"
-                  target="_blank"
-                  style={{ flexGrow: 1 }}
-                >
-                  GS Design System
-                </Button>
+                />
+              </div>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1b-content"
+              id="panel1b-header"
+            >
+              <Typography variant="h6">Component Library</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                A Component Library is a designed set of UI components that
+                developers can import into their apps.
+              </Typography>
+              <div style={{ marginTop: '.5rem', display: 'flex' }}>
+                <AccordionButton text="Material UI" href="https://mui.com/" />
+                <AccordionButton
+                  text="Bootstrap"
+                  href="https://getbootstrap.com/"
+                />
+                <AccordionButton
+                  text="Ant Design"
+                  href="https://ant.design/docs/react/introduce"
+                />
               </div>
             </AccordionDetails>
           </Accordion>
