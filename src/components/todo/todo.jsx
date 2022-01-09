@@ -7,9 +7,13 @@ import {
   Input,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import { FooterS, primaryColor, TitleS } from '../common/common.styles';
 
@@ -23,9 +27,21 @@ export const Todo = () => {
 
   function addTodo() {
     if (inputText !== '') {
-      todos.push(inputText);
+      todos.push({ label: inputText, complete: false });
+      setTodos([...todos]);
       setInputText('');
     }
+  }
+
+  function deleteTodo(index) {
+    todos.splice(index, 1);
+    setTodos([...todos]);
+  }
+
+  function completeTodo(index) {
+    const completedTodo = todos.splice(index, 1)[0];
+    completedTodo.complete = true;
+    setTodos([...todos, completedTodo]);
   }
 
   function onInputKeyUp(event) {
@@ -35,14 +51,8 @@ export const Todo = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexFlow: 'column',
-        height: '100%',
-      }}
-    >
-      <Container maxWidth="lg" sx={{}}>
+    <div>
+      <Container maxWidth="lg" className="page-content">
         <TitleS
           variant="h1"
           sx={{
@@ -76,13 +86,42 @@ export const Todo = () => {
               sx={{
                 background: 'white',
                 borderRadius: '0.4rem',
-                minHeight: '16rem',
+                minHeight: '55vh',
               }}
             >
               {todos.map((todo, index) => (
                 <div key={index}>
                   <ListItem>
-                    <ListItemText primary={todo} />
+                    <ListItemText
+                      primary={todo.complete ? undefined : todo.label}
+                      secondary={todo.complete ? todo.label : undefined}
+                    />
+                    <ListItemIcon onClick={() => deleteTodo(index)}>
+                      <DeleteIcon
+                        sx={{
+                          '&:hover': { color: 'error.main' },
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </ListItemIcon>
+                    {todo.complete ? (
+                      <ListItemIcon onClick={() => completeTodo(index)}>
+                        <CheckCircleIcon
+                          sx={{
+                            color: 'success.main',
+                          }}
+                        />
+                      </ListItemIcon>
+                    ) : (
+                      <ListItemIcon onClick={() => completeTodo(index)}>
+                        <CheckCircleOutlineIcon
+                          sx={{
+                            '&:hover': { color: 'success.main' },
+                            cursor: 'pointer',
+                          }}
+                        />
+                      </ListItemIcon>
+                    )}
                   </ListItem>
                   <Divider />
                 </div>
@@ -91,14 +130,7 @@ export const Todo = () => {
           </Box>
         </Box>
       </Container>
-      <div
-        style={{
-          height: `calc((3rem * ${
-            todos.length < 6 ? 5 : 10 - todos.length
-          }) - ${todos.length < 6 ? '.3rem' : '-0.3rem'})`, // fill remaining space when todo list is small
-        }}
-      ></div>
-      <FooterS />
+      <FooterS className="app-footer" />
     </div>
   );
 };
