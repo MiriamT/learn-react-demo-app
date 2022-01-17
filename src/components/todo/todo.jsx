@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Box,
@@ -15,19 +15,14 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-
 import { FooterS, primaryColor, TitleS } from '../common/common.styles';
-
-let nextTodoId = 0;
-function getNextTodoId() {
-  return ++nextTodoId;
-}
+import { TodoActions } from '../../state/todo/reducer';
+import { TodoContext } from '../../state/todo/context';
 
 const TodoListItem = ({
   todo,
-  index,
   deleteTodo,
-  completeTodo,
+  toggleTodo,
   innerRef,
   ...otherProps
 }) => {
@@ -35,7 +30,7 @@ const TodoListItem = ({
     <div>
       <ListItem ref={innerRef} {...otherProps} disabled={todo.complete}>
         <ListItemText primary={todo.label} />
-        <ListItemIcon onClick={() => deleteTodo(index)}>
+        <ListItemIcon onClick={() => deleteTodo(todo.id)}>
           <DeleteIcon
             sx={{
               '&:hover': { color: 'error.main' },
@@ -44,7 +39,7 @@ const TodoListItem = ({
           />
         </ListItemIcon>
         {todo.complete ? (
-          <ListItemIcon onClick={() => completeTodo(index)}>
+          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
             <CheckCircleIcon
               sx={{
                 color: 'success.main',
@@ -53,7 +48,7 @@ const TodoListItem = ({
             />
           </ListItemIcon>
         ) : (
-          <ListItemIcon onClick={() => completeTodo(index)}>
+          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
             <CheckCircleOutlineIcon
               sx={{
                 '&:hover': { color: 'success.main' },
@@ -80,8 +75,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 const getListStyle = (isDraggingOver) => ({});
 
 export const Todo = () => {
+  const { todos, dispatch: todoDispatch } = useContext(TodoContext);
   const [inputText, setInputText] = useState('');
-  const [todos, setTodos] = useState([]);
 
   function onInputChange(event) {
     setInputText(event.target.value);
@@ -89,31 +84,26 @@ export const Todo = () => {
 
   function addTodo() {
     if (inputText !== '') {
-      todos.push({
-        label: inputText,
-        complete: false,
-        id: String(getNextTodoId()),
+      todoDispatch({
+        type: TodoActions.ADD,
+        todo: { label: inputText, complete: false },
       });
-      setTodos([...todos]);
       setInputText('');
     }
   }
 
-  function deleteTodo(index) {
-    todos.splice(index, 1);
-    setTodos([...todos]);
+  function deleteTodo(id) {
+    todoDispatch({
+      type: TodoActions.DELETE,
+      id,
+    });
   }
 
-  function completeTodo(index) {
-    const todo = todos[index];
-    if (todo.complete) {
-      todo.complete = false;
-      setTodos([...todos]);
-    } else {
-      const completedTodo = todos.splice(index, 1)[0];
-      completedTodo.complete = true;
-      setTodos([...todos, completedTodo]);
-    }
+  function toggleTodo(id) {
+    todoDispatch({
+      type: TodoActions.TOGGLE,
+      id,
+    });
   }
 
   function onInputKeyUp(event) {
@@ -122,25 +112,17 @@ export const Todo = () => {
     }
   }
 
-  function reorderTodos(todos, startIndex, endIndex) {
-    const newTodos = Array.from(todos);
-    const [draggedTodo] = newTodos.splice(startIndex, 1);
-    newTodos.splice(endIndex, 0, draggedTodo);
-    return newTodos;
-  }
-
   function onDragEnd(result) {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    const newTodos = reorderTodos(
-      todos,
-      result.source.index,
-      result.destination.index
-    );
-    setTodos([...newTodos]);
+    todoDispatch({
+      type: TodoActions.REORDER,
+      sourceIndex: result.source.index,
+      destinationIndex: result.destination.index,
+    });
   }
 
   return (
@@ -197,9 +179,8 @@ export const Todo = () => {
                           <TodoListItem
                             key={index}
                             todo={todo}
-                            index={index}
                             deleteTodo={deleteTodo}
-                            completeTodo={completeTodo}
+                            toggleTodo={toggleTodo}
                             innerRef={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
