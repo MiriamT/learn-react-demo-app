@@ -1,11 +1,12 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Header } from './components/header/header';
-import { Home } from './components/home/home';
-import { Todo } from './components/todo/todo';
+import { Header } from '../header/header';
+import { Home } from '../home/home';
+import { Todo } from '../todo/todo';
 
 function App() {
   const pages = [{ name: 'Todo', path: 'todo' }];
+
   return (
     <BrowserRouter>
       <div className="App">
