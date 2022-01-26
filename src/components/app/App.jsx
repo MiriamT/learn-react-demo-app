@@ -6,9 +6,13 @@ import { Header } from '../header/header';
 import { Home } from '../home/home';
 import { Todo } from '../todo/todo';
 import { todoReducer } from '../../state/todo/reducer';
+import { Chat } from '../chat/chat';
 
 function App() {
-  const pages = [{ name: 'Todo', path: 'todo' }];
+  const pages = [
+    { name: 'Todo', path: 'todo' },
+    { name: 'Chat', path: 'chat' },
+  ];
   const [todoState, todoDispatch] = useReducer(todoReducer, {
     todos: [],
   });
@@ -28,6 +32,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="todo" element={<Todo />} />
+            <Route path="chat" element={<Chat />} />
           </Routes>
         </div>
       </BrowserRouter>

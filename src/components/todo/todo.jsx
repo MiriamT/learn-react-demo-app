@@ -19,61 +19,6 @@ import { FooterS, primaryColor, TitleS } from '../common/common.styles';
 import { TodoActions } from '../../state/todo/reducer';
 import { TodoContext } from '../../state/todo/context';
 
-const TodoListItem = ({
-  todo,
-  deleteTodo,
-  toggleTodo,
-  innerRef,
-  ...otherProps
-}) => {
-  return (
-    <div>
-      <ListItem ref={innerRef} {...otherProps} disabled={todo.complete}>
-        <ListItemText primary={todo.label} />
-        <ListItemIcon onClick={() => deleteTodo(todo.id)}>
-          <DeleteIcon
-            sx={{
-              '&:hover': { color: 'error.main' },
-              cursor: 'pointer',
-            }}
-          />
-        </ListItemIcon>
-        {todo.complete ? (
-          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
-            <CheckCircleIcon
-              sx={{
-                color: 'success.main',
-                cursor: 'pointer',
-              }}
-            />
-          </ListItemIcon>
-        ) : (
-          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
-            <CheckCircleOutlineIcon
-              sx={{
-                '&:hover': { color: 'success.main' },
-                cursor: 'pointer',
-              }}
-            />
-          </ListItemIcon>
-        )}
-      </ListItem>
-      <Divider />
-    </div>
-  );
-};
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // draggableStyle must be applied to the dragging element
-  ...draggableStyle,
-
-  ...(isDragging && {
-    background: '#C9E7F5',
-  }),
-});
-
-const getListStyle = (isDraggingOver) => ({});
-
 export const Todo = () => {
   const { todos, dispatch: todoDispatch } = useContext(TodoContext);
   const [inputText, setInputText] = useState('');
@@ -204,3 +149,58 @@ export const Todo = () => {
     </div>
   );
 };
+
+const TodoListItem = ({
+  todo,
+  deleteTodo,
+  toggleTodo,
+  innerRef,
+  ...otherProps
+}) => {
+  return (
+    <div>
+      <ListItem ref={innerRef} {...otherProps} disabled={todo.complete}>
+        <ListItemText primary={todo.label} />
+        <ListItemIcon onClick={() => deleteTodo(todo.id)}>
+          <DeleteIcon
+            sx={{
+              '&:hover': { color: 'error.main' },
+              cursor: 'pointer',
+            }}
+          />
+        </ListItemIcon>
+        {todo.complete ? (
+          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
+            <CheckCircleIcon
+              sx={{
+                color: 'success.main',
+                cursor: 'pointer',
+              }}
+            />
+          </ListItemIcon>
+        ) : (
+          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
+            <CheckCircleOutlineIcon
+              sx={{
+                '&:hover': { color: 'success.main' },
+                cursor: 'pointer',
+              }}
+            />
+          </ListItemIcon>
+        )}
+      </ListItem>
+      <Divider />
+    </div>
+  );
+};
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // draggableStyle must be applied to the dragging element
+  ...draggableStyle,
+
+  ...(isDragging && {
+    background: '#C9E7F5',
+  }),
+});
+
+const getListStyle = (isDraggingOver) => ({});

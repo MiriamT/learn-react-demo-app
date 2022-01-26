@@ -97,8 +97,8 @@ export const Home = () => {
         <AboutMiriam>
           <Text>
             Miriam is a software engineer at Goldman Sachs, specializing in UI
-            development. She graduated from Touro college and started her career
-            at GS leading business intellengence projects. After spending a year
+            development. She graduated from Touro College and started her career
+            at GS leading business intelligence projects. After spending a year
             researching blockchain in {'R&D'}, Miriam joined the Developer
             Experience team to chase her passion for building applications that
             people love to use.
