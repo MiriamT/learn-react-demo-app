@@ -4,7 +4,6 @@ import {
   Container,
   FormControl,
   IconButton,
-  Input,
   InputLabel,
   MenuItem,
   Paper,
@@ -19,12 +18,13 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 import { FooterS, TitleS } from '../common/common.styles';
 import { useInterval } from '../../hooks/use-interval';
+import { ChatContext } from '../../state/chat/context';
+import { ChatActions } from '../../state/chat/reducer';
 
 export const Chat = () => {
+  const { username, chatId, dispatch: chatDispatch } = useContext(ChatContext);
   const [fullscreen, setFullscreen] = useState(false);
-  const [userName, setUserName] = useState(''); // todo: save in context
   const [chats, setChats] = useState([]);
-  const [currentChatId, setCurrentChatId] = useState(''); // todo: save in context
   const [isChatPopoverOpen, setIsChatPopoverOpen] = useState(false);
   const [newChatName, setNewChatName] = useState('');
   const [inputText, setInputText] = useState('');
@@ -38,7 +38,6 @@ export const Chat = () => {
     fetch(`https://z36h06gqg7.execute-api.us-east-1.amazonaws.com/chats`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setChats(data.Items);
       });
   }
@@ -55,17 +54,26 @@ export const Chat = () => {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setMessages(data.Items);
         });
     },
     1000, // fast polling
     // 60000, // slow polling
-    currentChatId
+    chatId
   );
 
-  function onChatChange(event) {
-    setCurrentChatId(event.target.value);
+  function setChatId(chatId) {
+    chatDispatch({
+      type: ChatActions.UPDATE_CHATID,
+      chatId,
+    });
+  }
+
+  function setUsername(username) {
+    chatDispatch({
+      type: ChatActions.UPDATE_USERNAME,
+      username,
+    });
   }
 
   function onChatMenuOpen() {
@@ -87,14 +95,19 @@ export const Chat = () => {
   }
 
   function sendMessage() {
+    const message = {
+      chatId,
+      username,
+      text: inputText,
+    };
     fetch('https://z36h06gqg7.execute-api.us-east-1.amazonaws.com/messages', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json', // tells REST that we will send the body data in JSON format
       },
       body: JSON.stringify({
-        chatId: currentChatId,
-        username: userName,
+        chatId,
+        username,
         text: inputText,
       }),
     });
@@ -113,9 +126,8 @@ export const Chat = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setChats([...chats, data.Item]);
-        setCurrentChatId(data.Item.id);
+        setChatId(data.Item.id);
       });
     setNewChatName('');
     setIsChatPopoverOpen(false);
@@ -150,12 +162,14 @@ export const Chat = () => {
                   labelId="chat-select-label"
                   id="chat-select"
                   label="Chat"
-                  value={currentChatId}
-                  onChange={onChatChange}
+                  value={chatId}
+                  onChange={(event) => setChatId(event.target.value)}
                   onOpen={onChatMenuOpen}
                 >
                   {chats.map((chat) => (
-                    <MenuItem value={chat.id}>{chat.name}</MenuItem>
+                    <MenuItem key={chat.id} value={chat.id}>
+                      {chat.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -201,8 +215,8 @@ export const Chat = () => {
                 variant="standard"
                 label="User"
                 placeholder="username"
-                onChange={(event) => setUserName(event.target.value)}
-                value={userName}
+                onChange={(event) => setUsername(event.target.value)}
+                value={username}
               />
               <IconButton
                 aria-label="fullscreen"
@@ -231,7 +245,7 @@ export const Chat = () => {
                     key={index}
                     user={message.username}
                     text={message.text}
-                    isCurrentUser={userName === message.username}
+                    isCurrentUser={username === message.username}
                   />
                 ))}
               </Stack>
@@ -239,9 +253,9 @@ export const Chat = () => {
           </Box>
           <TextField
             variant="filled"
-            disabled={userName === ''}
+            disabled={username === ''}
             placeholder={
-              userName === ''
+              username === ''
                 ? 'enter a user name above to enable chat'
                 : 'type to chat!'
             }
