@@ -134,7 +134,7 @@ export const Chat = () => {
   }
 
   return (
-    <div>
+    <div data-testid="chat-page">
       <Container maxWidth="lg" className="page-content">
         {!fullscreen && (
           <TitleS
@@ -193,19 +193,21 @@ export const Chat = () => {
                   horizontal: 'left',
                 }}
               >
-                <TextField
-                  variant="standard"
-                  label="New Chat"
-                  placeholder="enter chat name"
-                  onChange={(event) => setNewChatName(event.target.value)}
-                  value={newChatName}
-                  onKeyUp={(event) => {
-                    if (event.key === 'Enter') {
-                      createNewChat();
-                    }
-                  }}
-                  sx={{ margin: '1rem' }}
-                />
+                <div>
+                  <TextField
+                    variant="standard"
+                    label="New Chat"
+                    placeholder="enter chat name"
+                    onChange={(event) => setNewChatName(event.target.value)}
+                    value={newChatName}
+                    onKeyUp={(event) => {
+                      if (event.key === 'Enter') {
+                        createNewChat();
+                      }
+                    }}
+                    sx={{ margin: '1rem' }}
+                  />
+                </div>
               </Popover>
             </div>
             <div style={{ flexGrow: 1 }}></div>

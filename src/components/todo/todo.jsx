@@ -71,7 +71,7 @@ export const Todo = () => {
   }
 
   return (
-    <div>
+    <div data-testid="todo-page">
       <Container maxWidth="lg" className="page-content">
         <TitleS
           variant="h1"
@@ -85,13 +85,14 @@ export const Todo = () => {
         <Box sx={{ maxWidth: '50rem' }}>
           <Box sx={{ margin: '2rem' }}>
             <Input
+              data-testid="todo__input"
               placeholder="enter task"
               onChange={onInputChange}
               value={inputText}
               onKeyUp={onInputKeyUp}
               sx={{ width: '75%', marginRight: '0.5rem' }}
             />
-            <IconButton aria-label="add" color="primary" onClick={addTodo}>
+            <IconButton aria-label="add-task" color="primary" onClick={addTodo}>
               <AddIcon />
             </IconButton>
           </Box>
@@ -122,6 +123,7 @@ export const Todo = () => {
                       >
                         {(provided, snapshot) => (
                           <TodoListItem
+                            data-testid="todo__todo-item"
                             key={index}
                             todo={todo}
                             deleteTodo={deleteTodo}
@@ -161,7 +163,10 @@ const TodoListItem = ({
     <div>
       <ListItem ref={innerRef} {...otherProps} disabled={todo.complete}>
         <ListItemText primary={todo.label} />
-        <ListItemIcon onClick={() => deleteTodo(todo.id)}>
+        <ListItemIcon
+          onClick={() => deleteTodo(todo.id)}
+          data-testid="todo-item__delete-icon"
+        >
           <DeleteIcon
             sx={{
               '&:hover': { color: 'error.main' },
@@ -170,7 +175,10 @@ const TodoListItem = ({
           />
         </ListItemIcon>
         {todo.complete ? (
-          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
+          <ListItemIcon
+            onClick={() => toggleTodo(todo.id)}
+            data-testid="todo-item__completed-icon"
+          >
             <CheckCircleIcon
               sx={{
                 color: 'success.main',
@@ -179,7 +187,10 @@ const TodoListItem = ({
             />
           </ListItemIcon>
         ) : (
-          <ListItemIcon onClick={() => toggleTodo(todo.id)}>
+          <ListItemIcon
+            onClick={() => toggleTodo(todo.id)}
+            data-testid="todo-item__not-completed-icon"
+          >
             <CheckCircleOutlineIcon
               sx={{
                 '&:hover': { color: 'success.main' },

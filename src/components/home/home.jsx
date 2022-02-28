@@ -51,7 +51,11 @@ const Hero = () => {
 
 const SectionHeading = ({ topic }) => {
   return (
-    <SectionHeadingS component="h2" sx={{ typography: 'h2' }}>
+    <SectionHeadingS
+      component="h2"
+      sx={{ typography: 'h2' }}
+      data-testid="home__section-title"
+    >
       More about{' '}
       <Box component="span" sx={{ color: accentColor }}>
         {topic}
@@ -78,7 +82,7 @@ const AccordionButton = ({ text, href }) => {
 
 export const Home = () => {
   return (
-    <HomeS>
+    <HomeS data-testid="home-page">
       <Hero />
       <Container maxWidth="lg">
         <TitleS

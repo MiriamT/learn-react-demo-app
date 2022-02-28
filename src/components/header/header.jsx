@@ -11,12 +11,10 @@ import {
   MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from 'react-router-dom';
 import { primaryColor } from '../common/common.styles';
 
-export const Header = ({ pages }) => {
-  const appName = 'Demo';
-  let navigate = useNavigate();
+export const Header = ({ pages, navigate }) => {
+  const appName = 'Demo Site';
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -32,6 +30,7 @@ export const Header = ({ pages }) => {
       sx={{
         background: primaryColor,
       }}
+      data-testid="app-header"
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -45,6 +44,7 @@ export const Header = ({ pages }) => {
               cursor: 'pointer',
             }}
             onClick={() => navigate('/')}
+            data-testid="app-header__app-name"
           >
             {appName}
           </Typography>
@@ -107,7 +107,6 @@ export const Header = ({ pages }) => {
             {pages.map((page, index) => (
               <Button
                 key={index}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
                 onClick={() => navigate(page.path)}
               >
