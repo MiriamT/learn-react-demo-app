@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { Header } from '../header/header';
 import { Home } from '../home/home';
 import { Todo } from '../todo/todo';
@@ -30,8 +30,9 @@ export const App = () => {
 
 export const AppWithRouter = () => {
   return (
-    <BrowserRouter>
+    // BrowserRouter is not compatible with Github Pages, so HashRouter is used instead: https://create-react-app.dev/docs/deployment/#notes-on-client-side-routing
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   );
 };

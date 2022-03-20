@@ -1,8 +1,11 @@
 {
   "name": "demo-app",
   "version": "0.1.1",
+  "homepage": "https://MiriamT.github.io/mcon-353-demo-site",
   "private": true,
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -25,6 +28,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^3.2.3",
     "nock": "^13.2.4"
   },
   "eslintConfig": {
