@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import {
   Box,
   Container,
@@ -25,9 +25,10 @@ export const Chat = () => {
   const { username, chatId, dispatch: chatDispatch } = useContext(ChatContext);
   const [fullscreen, setFullscreen] = useState(false);
   const [chats, setChats] = useState([]);
+  const newChatButtonEl = useRef(null);
   const [isChatPopoverOpen, setIsChatPopoverOpen] = useState(false);
   const [newChatName, setNewChatName] = useState('');
-  const [inputText, setInputText] = useState('');
+  const [messageInputText, setMessageInputText] = useState('');
   const [messages, setMessages] = useState([]);
 
   function toggleFullscreen() {
@@ -85,7 +86,7 @@ export const Chat = () => {
   }
 
   function onInputChange(event) {
-    setInputText(event.target.value);
+    setMessageInputText(event.target.value);
   }
 
   function onInputKeyUp(event) {
@@ -98,7 +99,7 @@ export const Chat = () => {
     const message = {
       chatId,
       username,
-      text: inputText,
+      text: messageInputText,
     };
     fetch('https://z36h06gqg7.execute-api.us-east-1.amazonaws.com/messages', {
       method: 'PUT',
@@ -108,10 +109,10 @@ export const Chat = () => {
       body: JSON.stringify({
         chatId,
         username,
-        text: inputText,
+        text: messageInputText,
       }),
     });
-    setInputText('');
+    setMessageInputText('');
   }
 
   function createNewChat() {
@@ -176,18 +177,17 @@ export const Chat = () => {
               <IconButton
                 aria-label="add"
                 color="primary"
-                id="create-new-chat-button"
+                aria-label="new-chat"
                 onClick={onClickNewChat}
                 sx={{ alignSelf: 'end' }}
+                ref={newChatButtonEl}
               >
                 <AddIcon />
               </IconButton>
               <Popover
                 open={isChatPopoverOpen}
                 onClose={() => setIsChatPopoverOpen(false)}
-                anchorEl={() =>
-                  document.getElementById('create-new-chat-button')
-                }
+                anchorEl={newChatButtonEl.current}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'left',
@@ -200,7 +200,7 @@ export const Chat = () => {
                     placeholder="enter chat name"
                     onChange={(event) => setNewChatName(event.target.value)}
                     value={newChatName}
-                    onKeyUp={(event) => {
+                    onKeyDown={(event) => {
                       if (event.key === 'Enter') {
                         createNewChat();
                       }
@@ -215,8 +215,8 @@ export const Chat = () => {
             <div style={{ display: 'flex' }}>
               <TextField
                 variant="standard"
-                label="User"
-                placeholder="username"
+                label="Username"
+                placeholder="enter username"
                 onChange={(event) => setUsername(event.target.value)}
                 value={username}
               />
@@ -262,7 +262,7 @@ export const Chat = () => {
                 : 'type to chat!'
             }
             onChange={onInputChange}
-            value={inputText}
+            value={messageInputText}
             onKeyUp={onInputKeyUp}
             fullWidth
           />
@@ -276,6 +276,7 @@ export const Chat = () => {
 const Message = ({ user, text, isCurrentUser }) => {
   return (
     <div
+      data-testid="chat__message"
       style={{
         display: 'flex',
         alignSelf: isCurrentUser ? 'end' : undefined,
