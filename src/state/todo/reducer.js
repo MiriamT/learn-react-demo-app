@@ -45,6 +45,8 @@ function toggleTodo(state, action) {
 
   if (todo.complete) {
     newTodos = reorderArray(newTodos, todoIndex, newTodos.length - 1);
+  } else {
+    newTodos = reorderArray(newTodos, todoIndex, 0);
   }
 
   return { ...state, todos: newTodos };
